@@ -1,20 +1,87 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# ⚡ ALGOLAB
 
-# Run and deploy your AI Studio app
+### Hybrid Merge + Insertion Sort Visualizer
 
-This contains everything you need to run your app locally.
+A futuristic ADA micro-project that visualizes the working of a Hybrid Merge + Insertion Sort algorithm using real-time animations and analytics.
 
-View your app in AI Studio: https://ai.studio/apps/e08bef03-97c0-4201-8394-b4e90789f67b
+---
 
-## Run Locally
+# 🚀 Features
 
-**Prerequisites:**  Node.js
+* Real-time sorting visualization
+* Hybrid Merge + Insertion Sort
+* Live analytics dashboard
+* Time complexity analysis
+* Performance comparison
+* Modern futuristic UI
+* Responsive dashboard
+* Interactive controls
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# 🧮 Algorithms Used
+
+## Merge Sort
+
+* Time Complexity: `O(n log n)`
+
+## Insertion Sort
+
+* Best for smaller partitions
+* Best Case: `O(n)`
+
+## Hybrid Sort
+
+Combines Merge Sort and Insertion Sort for optimized performance.
+
+---
+
+# 🛠️ Tech Stack
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* JavaScript
+
+---
+
+# 📸 Screenshots
+
+## 🌌 Landing Page
+
+<img src="./screenshots/landing-page.png" width="100%" />
+
+---
+
+## ⚡ Visualization Dashboard
+
+<img src="./screenshots/dashboard.png" width="100%" />
+
+---
+
+## 📊 Analytics System
+
+<img src="./screenshots/analytics.png" width="100%" />
+
+---
+
+# ▶️ Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+# 👨‍💻 Developed By
+
+**Shrivathsa**
+SVIT Engineering
+
+---
+
+# 📌 Project Type
+
+ADA Micro Project – Hybrid Algorithm Visualization System
