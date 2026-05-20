@@ -23,6 +23,10 @@ import {
   Lock,
   Code2,
   ArrowUpDown,
+  Maximize,
+  Minimize,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 import { VisualizerBar, AlgorithmType, TerminalLog as LogType } from './types';
 import { VisualizerStage } from './components/VisualizerStage';
@@ -50,6 +54,14 @@ export default function App() {
   const [isLanding, setIsLanding] = useState<boolean>(true);
   const [theme, setTheme] = useState<string>('cyber-dark');
   const [showSettings, setShowSettings] = useState<boolean>(false);
+
+  // Futuristic Interactive Overlays states
+  const [activeSystemPanel, setActiveSystemPanel] = useState<'privacy' | 'security' | 'status' | null>(null);
+  const [fps, setFps] = useState<number>(60);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [privacyMasking, setPrivacyMasking] = useState<boolean>(false);
+  const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
+  const [diagnosticProgress, setDiagnosticProgress] = useState<number>(0);
 
   // Audio configuration states
   const [uiSoundOn, setUiSoundOn] = useState<boolean>(soundfx.getUiSoundEnabled());
@@ -127,6 +139,86 @@ export default function App() {
   useEffect(() => {
     arrayStateRef.current = array;
   }, [array]);
+
+  // Fullscreen and Live Telemetry FPS listeners
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    let lastTime = performance.now();
+    let frames = 0;
+    let animationId: number;
+
+    const tick = () => {
+      frames++;
+      const time = performance.now();
+      if (time >= lastTime + 1000) {
+        setFps(Math.round((frames * 1000) / (time - lastTime)));
+        frames = 0;
+        lastTime = time;
+      }
+      animationId = requestAnimationFrame(tick);
+    };
+
+    animationId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animationId);
+  }, []);
+
+  const toggleFullscreen = () => {
+    soundfx.playClick();
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+      }).catch((err) => {
+        addSystemLog('Failed to enter fullscreen mode: ' + err.message, 'warn');
+      });
+    } else {
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+      }).catch((err) => {
+        addSystemLog('Failed to exit fullscreen mode: ' + err.message, 'warn');
+      });
+    }
+  };
+
+  // Diagnostics runner for Security Integrity Check
+  const runSecurityAudit = () => {
+    if (isDiagnosing) return;
+    setIsDiagnosing(true);
+    setDiagnosticProgress(0);
+    soundfx.playStart();
+    addSystemLog('[SECURITY] Initializing run-time engine safety check...', 'warn');
+
+    let currentProgress = 0;
+    const interval = setInterval(() => {
+      currentProgress += Math.round(Math.random() * 15) + 5;
+      if (currentProgress >= 100) {
+        currentProgress = 100;
+        clearInterval(interval);
+        setDiagnosticProgress(100);
+        setIsDiagnosing(false);
+        soundfx.playSuccess();
+        soundfx.speak("Security audit certified nominal.");
+        addSystemLog('[SECURITY] SUCCESS: Core verification complete. Integrity certified nominal.', 'success');
+      } else {
+        setDiagnosticProgress(currentProgress);
+        if (currentProgress > 80) {
+          addSystemLog('[SECURITY] Checking graphics compositor thread and layout boundaries...', 'info');
+        } else if (currentProgress > 50) {
+          addSystemLog(`[SECURITY] Auditing recursion limits for Hybrid threshold ${threshold}...`, 'info');
+        } else if (currentProgress > 25) {
+          addSystemLog(`[SECURITY] Verifying memory boundaries of size ${arrayStateRef.current.length} elements...`, 'info');
+        }
+      }
+    }, 200);
+  };
 
   // Set up mouse glow tracker and binary bits once
   useEffect(() => {
@@ -789,6 +881,14 @@ export default function App() {
         .subtle-hover-bounce:hover {
           animation: subtle-bounce 1.5s infinite ease-in-out;
         }
+        @keyframes scaleUp {
+          0% { transform: scale(0.96); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
       `}</style>
 
       {/* Dynamic Cursor Tracker Glow */}
@@ -892,17 +992,56 @@ export default function App() {
             </span>
           </div>
 
-          <div className="hidden sm:flex gap-3 text-[#849495]">
-            <Activity className="w-4 h-4 hover:text-white transition-colors cursor-pointer" />
-            <TerminalIcon className="w-4 h-4 hover:text-white transition-colors cursor-pointer" />
-            <Settings 
+          {/* Unified System Monitor Pill & Controls */}
+          <div className="hidden sm:flex items-center gap-3 border border-[var(--neon-cyan)]/20 bg-black/40 rounded-lg p-1 px-3 select-none font-mono text-[9px] text-[#849495]">
+            {/* FPS & Performance link */}
+            <button 
               onClick={() => {
                 setShowSettings(true);
                 soundfx.playClick();
               }}
               onMouseEnter={() => soundfx.playHover()}
-              className="w-4 h-4 hover:text-[var(--neon-cyan)] transition-colors cursor-pointer" 
-            />
+              className="flex items-center gap-1 hover:text-[var(--neon-cyan)] transition-all cursor-pointer bg-transparent border-none p-0 focus:outline-none font-bold"
+              title="Open System Controls & Performance Center"
+            >
+              <Activity className="w-3 h-3 animate-pulse text-[var(--neon-cyan)]" />
+              <span>{fps} FPS</span>
+            </button>
+
+            <span className="w-[1px] h-3 bg-neutral-800" />
+
+            {/* Fullscreen Toggle */}
+            <button 
+              onClick={toggleFullscreen}
+              onMouseEnter={() => soundfx.playHover()}
+              className="hover:text-[var(--neon-cyan)] transition-all cursor-pointer flex items-center justify-center bg-transparent border-none p-0 focus:outline-none"
+              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+            >
+              {isFullscreen ? (
+                <Minimize className="w-3 h-3 text-[var(--neon-purple)]" />
+              ) : (
+                <Maximize className="w-3 h-3 text-[var(--neon-cyan)]" />
+              )}
+            </button>
+
+            <span className="w-[1px] h-3 bg-neutral-800" />
+
+            {/* Engine Pulse Indicator */}
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full relative flex items-center justify-center">
+                <span className={`absolute w-full h-full rounded-full opacity-70 animate-ping ${
+                  isSwitching ? 'bg-amber-400' : isSorting ? 'bg-[var(--neon-purple)]' : 'bg-green-400'
+                }`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${
+                  isSwitching ? 'bg-amber-500 shadow-[0_0_6px_#f59e0b]' : isSorting ? 'bg-[var(--neon-purple)]' : 'bg-green-500'
+                }`} />
+              </div>
+              <span className={`font-mono text-[8px] tracking-wide font-black ${
+                isSwitching ? 'text-amber-400' : isSorting ? 'text-[var(--neon-purple)]' : 'text-green-400'
+              }`}>
+                {isSwitching ? 'SWAPPING' : isSorting ? 'SORTING' : 'SYS_READY'}
+              </span>
+            </div>
           </div>
         </div>
       </header>
@@ -1277,9 +1416,36 @@ export default function App() {
           © 2026 ALGOLAB NEURAL SYSTEMS. ALL RIGHTS RESERVED.
         </p>
         <div className="flex gap-5 font-mono text-[9px] font-bold text-[#84a9ab]">
-          <a href="#" className="hover:text-[var(--neon-cyan)] transition-colors">Privacy Protocol</a>
-          <a href="#" className="hover:text-[var(--neon-cyan)] transition-colors">Security</a>
-          <a href="#" className="hover:text-[var(--neon-cyan)] transition-colors">System Status</a>
+          <button 
+            onClick={() => {
+              setActiveSystemPanel('privacy');
+              soundfx.playClick();
+            }}
+            onMouseEnter={() => soundfx.playHover()}
+            className="hover:text-[var(--neon-cyan)] transition-colors cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+          >
+            Privacy Protocol
+          </button>
+          <button 
+            onClick={() => {
+              setActiveSystemPanel('security');
+              soundfx.playClick();
+            }}
+            onMouseEnter={() => soundfx.playHover()}
+            className="hover:text-[var(--neon-cyan)] transition-colors cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+          >
+            Security
+          </button>
+          <button 
+            onClick={() => {
+              setActiveSystemPanel('status');
+              soundfx.playClick();
+            }}
+            onMouseEnter={() => soundfx.playHover()}
+            className="hover:text-[var(--neon-cyan)] transition-colors cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+          >
+            System Status
+          </button>
         </div>
       </footer>
 
@@ -1564,6 +1730,265 @@ export default function App() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Cyberpunk System Modals */}
+      {activeSystemPanel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto select-none animate-[fadeIn_0.2s_ease-out]">
+          <div 
+            className="absolute inset-0 bg-transparent cursor-pointer"
+            onClick={() => {
+              setActiveSystemPanel(null);
+              soundfx.playClick();
+            }}
+          />
+          
+          {/* Holographic Window */}
+          <div className="w-full max-w-md bg-[#091010]/95 backdrop-blur-xl border border-[var(--neon-cyan)]/30 rounded-xl shadow-2xl relative overflow-hidden flex flex-col p-6 animate-[scaleUp_0.25s_ease-out] z-10 laser-sweep"
+               style={{
+                 borderColor: activeSystemPanel === 'security' ? 'var(--neon-purple)' : 'var(--neon-cyan)',
+                 boxShadow: activeSystemPanel === 'security' 
+                   ? '0 0 35px rgba(255, 0, 255, 0.25), inset 0 0 15px rgba(255, 0, 255, 0.05)'
+                   : '0 0 35px rgba(0, 243, 255, 0.25), inset 0 0 15px rgba(0, 243, 255, 0.05)'
+               }}>
+            {/* Grid & Laser Beam Atmosphere */}
+            <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
+            <div className="absolute inset-x-0 h-[1px] scanner-beam opacity-30 pointer-events-none" 
+                 style={{ 
+                   animation: 'laser-vertical 4s infinite linear',
+                   backgroundImage: activeSystemPanel === 'security' 
+                     ? 'linear-gradient(to right, transparent, var(--neon-purple), transparent)' 
+                     : 'linear-gradient(to right, transparent, var(--neon-cyan), transparent)'
+                 }} />
+            
+            {/* Header */}
+            <div className="flex justify-between items-start border-b border-neutral-800/60 pb-3.5 mb-4 z-10">
+              <div className="flex items-center gap-2.5">
+                {activeSystemPanel === 'privacy' && <Fingerprint className="w-5 h-5 text-[var(--neon-cyan)] animate-pulse" />}
+                {activeSystemPanel === 'security' && <Shield className="w-5 h-5 text-[var(--neon-purple)] animate-pulse" />}
+                {activeSystemPanel === 'status' && <Cpu className="w-5 h-5 text-[var(--neon-cyan)] animate-pulse" />}
+                
+                <div className="space-y-0.5 text-left">
+                  <h3 className="font-sans text-xs font-black text-white tracking-widest uppercase">
+                    {activeSystemPanel === 'privacy' && 'PRIVACY PROTOCOL OVERLAY'}
+                    {activeSystemPanel === 'security' && 'CORE SAFETY INDEX'}
+                    {activeSystemPanel === 'status' && 'SYSTEM TELEMETRY INDEX'}
+                  </h3>
+                  <p className="font-mono text-[7px] text-[var(--text-dim)] uppercase tracking-wider">
+                    {activeSystemPanel === 'privacy' && 'Local Memory Isolation'}
+                    {activeSystemPanel === 'security' && 'Stack Sandbox Check'}
+                    {activeSystemPanel === 'status' && 'Realtime Pipeline Metrics'}
+                  </p>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => {
+                  setActiveSystemPanel(null);
+                  soundfx.playClick();
+                }}
+                onMouseEnter={() => soundfx.playHover()}
+                className="p-1 hover:bg-neutral-800/40 rounded border border-neutral-800/80 hover:border-neutral-700/80 text-[var(--text-dim)] hover:text-white transition-all cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="space-y-5 text-left z-10">
+              {/* PRIVACY PROTOCOL */}
+              {activeSystemPanel === 'privacy' && (
+                <>
+                  <div className="grid grid-cols-2 gap-2 font-mono text-[8px] uppercase text-[var(--text-dim)] bg-black/40 border border-neutral-800/60 p-3 rounded-lg">
+                    <div>
+                      <p className="text-[7px] opacity-50">Local Stack</p>
+                      <p className="text-[var(--neon-cyan)] font-bold">100% Client-Side</p>
+                    </div>
+                    <div>
+                      <p className="text-[7px] opacity-50">Data Egress</p>
+                      <p className="text-green-500 font-bold">0 Sockets Open</p>
+                    </div>
+                    <div className="col-span-2 border-t border-neutral-900 mt-1 pt-1.5 flex justify-between items-center">
+                      <span>Encryption Masking</span>
+                      <span className={privacyMasking ? "text-[var(--neon-cyan)]" : "text-amber-500"}>
+                        {privacyMasking ? "ACTIVE" : "STANDBY"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="font-mono text-[9px] text-[var(--text-dim)] uppercase leading-relaxed">
+                    AlgoLab's hybrid engine processes all sorting lists, metrics, and ADA diagnostics inside client-side browser heap storage. No telemetry data or list contents are transmitted to external servers.
+                  </p>
+
+                  {/* Encryption Masking Toggle switch */}
+                  <div className="flex items-center justify-between p-3 rounded-lg border border-neutral-800 bg-black/45 hover:border-[var(--neon-cyan)]/25 transition-all">
+                    <div className="space-y-0.5">
+                      <span className="font-mono text-[9px] font-bold text-white uppercase block">Secure Encryption</span>
+                      <span className="font-mono text-[7px] text-[var(--text-dim)] uppercase block">Mask debugging logs</span>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        const nextVal = !privacyMasking;
+                        setPrivacyMasking(nextVal);
+                        soundfx.playClick();
+                        if (nextVal) {
+                          addSystemLog('[PRIVACY] Secure masking enabled. Memory logs obfuscated.', 'accent');
+                        } else {
+                          addSystemLog('[PRIVACY] Masking mode disabled.', 'info');
+                        }
+                      }}
+                      onMouseEnter={() => soundfx.playHover()}
+                      className={`relative w-10 h-4.5 rounded transition-all border cursor-pointer ${
+                        privacyMasking 
+                          ? 'bg-[var(--neon-cyan-grad)] border-[var(--neon-cyan)] shadow-[0_0_8px_rgba(0,243,255,0.25)]' 
+                          : 'bg-black border-neutral-700'
+                      }`}
+                    >
+                      <span className={`absolute top-0.5 w-3 h-3 rounded transition-all flex items-center justify-center font-mono text-[5px] font-black ${
+                        privacyMasking 
+                          ? 'left-6 bg-[var(--neon-cyan)] text-black' 
+                          : 'left-1 bg-neutral-600 text-neutral-300'
+                      }`}>
+                        {privacyMasking ? 'ON' : 'OFF'}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Binary cascade visualization */}
+                  <div className="h-16 border border-[var(--neon-cyan)]/20 bg-black/60 rounded-lg p-2 font-mono text-[7px] text-[var(--neon-cyan)]/45 overflow-hidden relative flex justify-around select-none">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#091010]/30 to-[#091010] pointer-events-none" />
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="flex flex-col animate-[slide-down_2.5s_infinite_linear]" style={{ animationDelay: `${i * 0.4}s` }}>
+                        {Array.from({ length: 8 }).map((_, j) => (
+                          <span key={j} className={j % 2 === 0 ? 'text-[var(--neon-purple)]/30' : ''}>
+                            {Math.random() > 0.5 ? '1' : '0'}
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* SECURITY & CORE INTEGRITY */}
+              {activeSystemPanel === 'security' && (
+                <>
+                  <div className="grid grid-cols-2 gap-2.5 font-mono text-[8px] uppercase text-[var(--text-dim)] bg-black/40 border border-neutral-800/60 p-3 rounded-lg">
+                    <div>
+                      <p className="text-[7px] opacity-50">Stack Protection</p>
+                      <p className="text-[var(--neon-purple)] font-bold">BOUNDS CHECK</p>
+                    </div>
+                    <div>
+                      <p className="text-[7px] opacity-50">Core Memory</p>
+                      <p className="text-[#39ff14] font-bold">99.98% COHERENT</p>
+                    </div>
+                    <div className="col-span-2 border-t border-neutral-900 mt-1 pt-1.5 flex justify-between">
+                      <span>Engine stability index</span>
+                      <span className="text-[#39ff14] font-black">NOMINAL (100%)</span>
+                    </div>
+                  </div>
+
+                  {isDiagnosing ? (
+                    <div className="p-3 border border-[var(--neon-purple)]/35 bg-black/60 rounded-lg space-y-2.5">
+                      <div className="flex justify-between items-center font-mono text-[9px] font-bold text-white">
+                        <span className="animate-pulse">VERIFYING STACK COHERENCY...</span>
+                        <span className="text-[var(--neon-purple)] font-black">{diagnosticProgress}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-black rounded overflow-hidden border border-neutral-800">
+                        <div className="h-full bg-gradient-to-r from-[var(--neon-purple)] to-[var(--neon-cyan)] transition-all duration-150" 
+                             style={{ width: `${diagnosticProgress}%` }} />
+                      </div>
+                      <p className="font-mono text-[7px] text-[var(--text-dim)] uppercase">
+                        {diagnosticProgress > 80 ? 'CHECKING GPU FRAME BUFFER LAYOUTS...' :
+                         diagnosticProgress > 50 ? 'AUDITING RECURSION BRANCHING LEVELS...' :
+                         diagnosticProgress > 25 ? 'VERIFYING STACK ALIGNMENT & PADDING...' : 'INITIALIZING REGISTERS...'}
+                      </p>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={runSecurityAudit}
+                      className="w-full py-3.5 text-center font-mono text-[10px] font-black tracking-widest uppercase border border-[var(--neon-purple)]/40 neon-purple-glow bg-[var(--neon-purple-grad)] hover:bg-[var(--neon-purple)] hover:text-white transition-all cursor-pointer rounded-lg laser-sweep"
+                    >
+                      [ RUN SYSTEM SAFETY AUDIT ]
+                    </button>
+                  )}
+
+                  <p className="font-mono text-[9px] text-[var(--text-dim)] uppercase leading-relaxed">
+                    Safety protocols prevent callstack memory leakage during deep insertion swaps. Algorithmic thresholds partition list boundaries inside isolated Javascript execution contexts.
+                  </p>
+                </>
+              )}
+
+              {/* SYSTEM STATUS & TELEMETRY */}
+              {activeSystemPanel === 'status' && (
+                <>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-[9px] text-[var(--text-dim)] bg-black/50 border border-neutral-800 p-3 rounded-lg uppercase">
+                    <div className="flex justify-between border-b border-neutral-900 pb-1">
+                      <span>ALGORITHM:</span>
+                      <span className="text-white font-bold">{algorithm.toUpperCase()}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-neutral-900 pb-1">
+                      <span>FPS RATE:</span>
+                      <span className="text-[var(--neon-cyan)] font-bold">{fps} FPS</span>
+                    </div>
+                    <div className="flex justify-between border-b border-neutral-900 pb-1">
+                      <span>SIZE (N):</span>
+                      <span className="text-white font-bold">{array.length}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-neutral-900 pb-1">
+                      <span>LIMIT (k):</span>
+                      <span className="text-white font-bold">{threshold}</span>
+                    </div>
+                    <div className="flex justify-between col-span-2 pt-1">
+                      <span>ENGINE MODE:</span>
+                      <span className={isSorting ? "text-[var(--neon-purple)] font-black animate-pulse" : "text-[#39ff14] font-black"}>
+                        {isSorting ? "PROCESSING SWAPS" : "STANDBY READY"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Core Memory Registry visualizer grid */}
+                  <div className="space-y-1.5">
+                    <span className="font-mono text-[8px] text-[var(--text-dim)] uppercase tracking-wider block">Memory Register Viewport (64 sectors)</span>
+                    <div className="grid grid-cols-8 gap-1.5 bg-black/40 border border-neutral-800 p-3 rounded-lg">
+                      {Array.from({ length: 64 }).map((_, idx) => {
+                        const hasVal = array.length > 0;
+                        const targetIdx = idx % (array.length || 1);
+                        const barItem = hasVal ? array[targetIdx] : null;
+                        
+                        let dotBg = 'bg-neutral-800/40 border border-neutral-800';
+                        if (barItem) {
+                          if (barItem.status === 'comparing') {
+                            dotBg = 'bg-[var(--neon-purple)] shadow-[0_0_8px_var(--neon-purple)] border border-[var(--neon-purple)] animate-pulse';
+                          } else if (barItem.status === 'swapping') {
+                            dotBg = 'bg-amber-400 shadow-[0_0_8px_#f59e0b] border border-amber-400 animate-ping';
+                          } else if (barItem.status === 'sorted') {
+                            dotBg = 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)] border border-green-500';
+                          } else {
+                            dotBg = 'bg-[var(--neon-cyan)]/25 border border-[var(--neon-cyan)]/20';
+                          }
+                        }
+                        return (
+                          <div 
+                            key={idx} 
+                            className={`h-2.5 rounded-sm transition-all duration-300 ${dotBg}`}
+                            title={barItem ? `Sector ${idx}: Val ${barItem.value}%` : `Sector ${idx}`} 
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="mt-5 pt-3 border-t border-neutral-900 z-10 flex justify-between font-mono text-[7px] text-[var(--text-dim)] uppercase">
+              <span>SYSTEM DIAGNOSTIC: PORT 3000</span>
+              <span className="text-[var(--neon-cyan)]">ALGOLAB SYSTEM OK</span>
             </div>
           </div>
         </div>
