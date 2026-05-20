@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-pink: var(--neon-purple);
+}
+
+:root {
+  /* Default: Cyber Dark */
+  --neon-cyan: #00f3ff;
+  --neon-purple: #ff00ff;
+  
+  --bg-app: #091010;
+  --bg-panel: rgba(5, 5, 5, 0.65);
+  --border-color: rgba(0, 243, 255, 0.18);
+  --text-main: #e1fcff;
+  --text-dim: #84a9ab;
+  --grid-color: rgba(0, 243, 255, 0.08);
+  --scanline-color: rgba(0, 243, 255, 0.08);
+  --btn-glow-cyan: rgba(0, 243, 255, 0.45);
+  --btn-glow-purple: rgba(255, 0, 255, 0.45);
+  
+  --neon-cyan-grad: rgba(0, 243, 255, 0.15);
+  --neon-purple-grad: rgba(255, 0, 255, 0.15);
+  
+  --bar-default-via: rgba(0, 243, 255, 0.15);
+  --bar-default-shadow: rgba(0, 243, 255, 0.35);
+  --bar-hover-via: rgba(255, 0, 255, 0.2);
+  --bar-hover-shadow: rgba(255, 0, 255, 0.65);
+}
+
+.theme-neon-purple {
+  --neon-cyan: #9d4edd;
+  --neon-purple: #ff007f;
+  
+  --bg-app: #0f051d;
+  --bg-panel: rgba(15, 3, 25, 0.7);
+  --border-color: rgba(157, 78, 221, 0.22);
+  --text-main: #f3e8ff;
+  --text-dim: #c084fc;
+  --grid-color: rgba(157, 78, 221, 0.08);
+  --scanline-color: rgba(157, 78, 221, 0.08);
+  --btn-glow-cyan: rgba(157, 78, 221, 0.45);
+  --btn-glow-purple: rgba(255, 0, 127, 0.45);
+  
+  --neon-cyan-grad: rgba(157, 78, 221, 0.15);
+  --neon-purple-grad: rgba(255, 0, 127, 0.15);
+  
+  --bar-default-via: rgba(157, 78, 221, 0.15);
+  --bar-default-shadow: rgba(157, 78, 221, 0.35);
+  --bar-hover-via: rgba(255, 0, 127, 0.2);
+  --bar-hover-shadow: rgba(255, 0, 127, 0.65);
+}
+
+.theme-matrix-blue {
+  --neon-cyan: #00d2ff;
+  --neon-purple: #00f5d4;
+  
+  --bg-app: #010b14;
+  --bg-panel: rgba(1, 15, 28, 0.75);
+  --border-color: rgba(0, 210, 255, 0.2);
+  --text-main: #e0f7fa;
+  --text-dim: #00b4d8;
+  --grid-color: rgba(0, 210, 255, 0.07);
+  --scanline-color: rgba(0, 210, 255, 0.07);
+  --btn-glow-cyan: rgba(0, 210, 255, 0.45);
+  --btn-glow-purple: rgba(0, 245, 212, 0.45);
+  
+  --neon-cyan-grad: rgba(0, 210, 255, 0.15);
+  --neon-purple-grad: rgba(0, 245, 212, 0.15);
+  
+  --bar-default-via: rgba(0, 210, 255, 0.15);
+  --bar-default-shadow: rgba(0, 210, 255, 0.35);
+  --bar-hover-via: rgba(0, 245, 212, 0.2);
+  --bar-hover-shadow: rgba(0, 245, 212, 0.65);
+}
+
+.theme-threat-red {
+  --neon-cyan: #ff003c;
+  --neon-purple: #ff7b00;
+  
+  --bg-app: #120204;
+  --bg-panel: rgba(10, 1, 2, 0.8);
+  --border-color: rgba(255, 0, 60, 0.22);
+  --text-main: #ffe3e3;
+  --text-dim: #f43f5e;
+  --grid-color: rgba(255, 0, 60, 0.08);
+  --scanline-color: rgba(255, 0, 60, 0.08);
+  --btn-glow-cyan: rgba(255, 0, 60, 0.45);
+  --btn-glow-purple: rgba(255, 123, 0, 0.45);
+  
+  --neon-cyan-grad: rgba(255, 0, 60, 0.15);
+  --neon-purple-grad: rgba(255, 123, 0, 0.15);
+  
+  --bar-default-via: rgba(255, 0, 60, 0.15);
+  --bar-default-shadow: rgba(255, 0, 60, 0.35);
+  --bar-hover-via: rgba(255, 123, 0, 0.2);
+  --bar-hover-shadow: rgba(255, 123, 0, 0.65);
+}
+
+.theme-light-tactical {
+  --neon-cyan: #2b5c8f;
+  --neon-purple: #f77f00;
+  
+  --bg-app: #f4f6f8;
+  --bg-panel: rgba(233, 236, 239, 0.85);
+  --border-color: rgba(43, 92, 143, 0.25);
+  --text-main: #1a2530;
+  --text-dim: #495057;
+  --grid-color: rgba(43, 92, 143, 0.06);
+  --scanline-color: rgba(43, 92, 143, 0.06);
+  --btn-glow-cyan: rgba(43, 92, 143, 0.35);
+  --btn-glow-purple: rgba(247, 127, 0, 0.35);
+  
+  --neon-cyan-grad: rgba(43, 92, 143, 0.12);
+  --neon-purple-grad: rgba(247, 127, 0, 0.12);
+  
+  --bar-default-via: rgba(43, 92, 143, 0.12);
+  --bar-default-shadow: rgba(43, 92, 143, 0.25);
+  --bar-hover-via: rgba(247, 127, 0, 0.15);
+  --bar-hover-shadow: rgba(247, 127, 0, 0.5);
+}
+
+@layer utilities {
+  .cyber-grid {
+    background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: grid-pulse 6s ease-in-out infinite alternate;
+  }
+
+  .glass-panel {
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02), 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .neon-cyan-glow {
+    box-shadow: 0 0 15px var(--btn-glow-cyan);
+    border-color: var(--neon-cyan);
+  }
+
+  .neon-purple-glow {
+    box-shadow: 0 0 15px var(--btn-glow-purple);
+    border-color: var(--neon-purple);
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 45%,
+      rgba(255, 255, 255, 0.04) 50%,
+      transparent 55%
+    );
+    animation: shimmer-animation 4s infinite linear;
+  }
+
+  .visualizer-bar-default {
+    background: linear-gradient(to top, transparent, var(--bar-default-via), var(--neon-cyan));
+    border-top: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 10px var(--bar-default-shadow);
+  }
+  
+  .visualizer-bar-default:hover {
+    background: linear-gradient(to top, transparent, var(--bar-hover-via), var(--neon-purple));
+    border-top: 2px solid var(--neon-purple);
+    box-shadow: 0 0 15px var(--bar-hover-shadow);
+  }
+}
+
+@keyframes grid-pulse {
+  0% { opacity: 0.15; }
+  100% { opacity: 0.45; }
+}
+
+@keyframes shimmer-animation {
+  0% { transform: translateX(-100%) translateY(-100%); }
+  100% { transform: translateX(100%) translateY(100%); }
+}
+
+.scanline {
+  width: 100%;
+  height: 2px;
+  background: var(--scanline-color);
+  opacity: 0.35;
+  position: absolute;
+  top: 0;
+  animation: scanline-bounce 10s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes scanline-bounce {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+/* Custom Webkit scrollbar styles */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(5, 5, 5, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+}

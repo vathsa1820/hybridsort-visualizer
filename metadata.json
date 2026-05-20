@@ -1,0 +1,6 @@
+{
+  "name": "HybridSort Engine",
+  "description": "An interactive cyberpunk visualization dashboard of the Hybrid Merge and Insertion Sort algorithms.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
