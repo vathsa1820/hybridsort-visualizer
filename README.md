@@ -214,19 +214,19 @@ npm run dev
 
 ## 🌌 Landing Page
 
-![Landing Page](./screenshots/landing-page.png)
+<img src="./screenshots/landing-page.png" width="100%" />
 
 ---
 
 ## ⚡ Visualization Dashboard
 
-![Dashboard](./screenshots/dashboard.png)
+<img src="./screenshots/dashboard.png" width="100%" />
 
 ---
 
 ## 📊 Analytics System
 
-![Analytics](./screenshots/analytics.png)
+<img src="./screenshots/analytics.png" width="100%" />
 
 ---
 
