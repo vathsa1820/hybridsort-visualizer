@@ -3,7 +3,9 @@
 ### Hybrid Merge + Insertion Sort Visualizer
 
 A futuristic ADA micro-project that visualizes the working of a Hybrid Merge + Insertion Sort algorithm using real-time animations and analytics.
+# 🌐 Live Demo
 
+🔗 [Open ALGOLAB Visualizer](https://hybridsort-visualizer.vercel.app/)
 ---
 
 # 🚀 Features
