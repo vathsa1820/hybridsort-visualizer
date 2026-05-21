@@ -257,7 +257,6 @@ Through this project, we explored:
 # 👨‍💻 Contributors
 
 * **Shrivathsa**
-* SVIT Engineering
 
 ---
 
